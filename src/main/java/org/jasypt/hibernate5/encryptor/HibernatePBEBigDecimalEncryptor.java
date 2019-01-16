@@ -83,7 +83,7 @@ import java.math.BigDecimal;
  *  &lt;/bean>
  *
  *  &lt;bean id="hibernateEncryptor"
- *    class="org.jasypt.hibernate.encryptor.HibernatePBEBigDecimalEncryptor">
+ *    class="org.jasypt.hibernate5.encryptor.HibernatePBEBigDecimalEncryptor">
  *    &lt;property name="registeredName">
  *        &lt;value><b>myHibernateBigDecimalEncryptor</b>&lt;/value>
  *    &lt;/property>
@@ -99,7 +99,7 @@ import java.math.BigDecimal;
  * </p>
  * <p>
  * <pre>
- *    &lt;typedef name="encrypted" class="org.jasypt.hibernate.type.EncryptedBigDecimalType">
+ *    &lt;typedef name="encrypted" class="org.jasypt.hibernate5.type.EncryptedBigDecimalType">
  *      &lt;param name="encryptorRegisteredName"><b>myHibernateBigDecimalEncryptor</b>&lt;/param>
  *      &lt;param name="decimalScale"><b>2</b>&lt;/param>
  *    &lt;/typedef>

@@ -58,7 +58,7 @@ import java.util.Properties;
  * <pre>
  *  &lt;hibernate-mapping package="myapp">
  *    ...
- *    &lt;typedef name="<b>encryptedBinary</b>" class="org.jasypt.hibernate.type.EncryptedBinaryType">
+ *    &lt;typedef name="<b>encryptedBinary</b>" class="org.jasypt.hibernate5.type.EncryptedBinaryType">
  *      &lt;param name="encryptorRegisteredName"><b><i>myHibernateByteEncryptor</i></b>&lt;/param>
  *    &lt;/typedef>
  *    ...
@@ -75,7 +75,7 @@ import java.util.Properties;
  * ...where a <tt>HibernatePBEByteEncryptor</tt> object
  * should have been previously registered to be used
  * from Hibernate with name <tt>myHibernateByteEncryptor</tt> (see
- * {@link HibernatePBEByteEncryptor} and {@link HibernatePBEEncryptorRegistry}).
+ * {@link org.jasypt.hibernate5.encryptor.HibernatePBEByteEncryptor} and {@link HibernatePBEEncryptorRegistry}).
  * </p>
  * <p>
  * Or, if you prefer to avoid registration of encryptors, you can configure
@@ -86,7 +86,7 @@ import java.util.Properties;
  * <pre>
  *  &lt;hibernate-mapping package="myapp">
  *    ...
- *    &lt;typedef name="<b>encryptedBinary</b>" class="org.jasypt.hibernate.type.EncryptedBinaryType">
+ *    &lt;typedef name="<b>encryptedBinary</b>" class="org.jasypt.hibernate5.type.EncryptedBinaryType">
  *      &lt;param name="algorithm"><b><i>PBEWithMD5AndTripleDES</i></b>&lt;/param>
  *      &lt;param name="password"><b><i>XXXXX</i></b>&lt;/param>
  *      &lt;param name="keyObtentionIterations"><b><i>1000</i></b>&lt;/param>

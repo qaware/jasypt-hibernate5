@@ -70,7 +70,7 @@ import java.util.HashMap;
  * </p>
  * <p>
  * <pre>
- *    &lt;typedef name="encryptedString" class="org.jasypt.hibernate.type.EncryptedStringType">
+ *    &lt;typedef name="encryptedString" class="org.jasypt.hibernate5.type.EncryptedStringType">
  *      &lt;param name="encryptorRegisteredName"><b>myHibernateEncryptor</b>&lt;/param>
  *    &lt;/typedef>
  * </pre>

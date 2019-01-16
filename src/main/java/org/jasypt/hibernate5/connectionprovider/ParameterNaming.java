@@ -34,7 +34,7 @@ public final class ParameterNaming {
     /**
      * Property in <tt>hibernate.cfg.xml</tt> or
      * <tt>hibernate.properties</tt> which contains the registered name
-     * (in {@link HibernatePBEEncryptorRegistry}) of the encryptor which
+     * (in {@link org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry}) of the encryptor which
      * will be used to decrypt the datasource parameters.
      */
     public static final String ENCRYPTOR_REGISTERED_NAME =

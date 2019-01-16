@@ -81,7 +81,7 @@ import org.jasypt.salt.SaltGenerator;
  *  &lt;/bean>
  *
  *  &lt;bean id="hibernateEncryptor"
- *    class="org.jasypt.hibernate.encryptor.HibernatePBEByteEncryptor">
+ *    class="org.jasypt.hibernate5.encryptor.HibernatePBEByteEncryptor">
  *    &lt;property name="registeredName">
  *        &lt;value><b>myHibernateByteEncryptor</b>&lt;/value>
  *    &lt;/property>
@@ -97,7 +97,7 @@ import org.jasypt.salt.SaltGenerator;
  * </p>
  * <p>
  * <pre>
- *    &lt;typedef name="encrypted" class="org.jasypt.hibernate.type.EncryptedBinaryType">
+ *    &lt;typedef name="encrypted" class="org.jasypt.hibernate5.type.EncryptedBinaryType">
  *      &lt;param name="encryptorRegisteredName"><b>myHibernateByteEncryptor</b>&lt;/param>
  *    &lt;/typedef>
  * </pre>

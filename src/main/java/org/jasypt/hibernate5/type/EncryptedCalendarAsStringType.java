@@ -44,7 +44,7 @@ import java.util.TimeZone;
  * <pre>
  *  &lt;hibernate-mapping package="myapp">
  *    ...
- *    &lt;typedef name="<b>encryptedCalendarAsString</b>" class="org.jasypt.hibernate.type.EncryptedCalendarAsStringType">
+ *    &lt;typedef name="<b>encryptedCalendarAsString</b>" class="org.jasypt.hibernate5.type.EncryptedCalendarAsStringType">
  *      &lt;param name="encryptorRegisteredName"><b><i>myHibernateStringEncryptor</i></b>&lt;/param>
  *      &lt;param name="storeTimeZone"><b><i>true</i></b>&lt;/param>
  *    &lt;/typedef>
@@ -62,7 +62,7 @@ import java.util.TimeZone;
  * ...where a <tt>HibernatePBEStringEncryptor</tt> object
  * should have been previously registered to be used
  * from Hibernate with name <tt>myHibernateStringEncryptor</tt> (see
- * {@link HibernatePBEStringEncryptor} and {@link HibernatePBEEncryptorRegistry}).
+ * {@link org.jasypt.hibernate5.encryptor.HibernatePBEStringEncryptor} and {@link org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry}).
  * </p>
  * <p>
  * The boolean <tt>storeTimeZone</tt> parameter allows the Calendar to be
@@ -78,7 +78,7 @@ import java.util.TimeZone;
  * <pre>
  *  &lt;hibernate-mapping package="myapp">
  *    ...
- *    &lt;typedef name="<b>encryptedCalendarAsString</b>" class="org.jasypt.hibernate.type.EncryptedCalendarAsStringType">
+ *    &lt;typedef name="<b>encryptedCalendarAsString</b>" class="org.jasypt.hibernate5.type.EncryptedCalendarAsStringType">
  *      &lt;param name="algorithm"><b><i>PBEWithMD5AndTripleDES</i></b>&lt;/param>
  *      &lt;param name="password"><b><i>XXXXX</i></b>&lt;/param>
  *      &lt;param name="keyObtentionIterations"><b><i>1000</i></b>&lt;/param>
@@ -108,7 +108,7 @@ public final class EncryptedCalendarAsStringType extends AbstractEncryptedAsStri
     private Boolean storeTimeZone = Boolean.FALSE;
 
     /**
-     * @see org.jasypt.hibernate.type.AbstractEncryptedAsStringType#convertToObject(java.lang.String)
+     * @see org.jasypt.hibernate5.type.AbstractEncryptedAsStringType#convertToObject(java.lang.String)
      */
     protected Object convertToObject(final String string) {
         final String[] stringTokens = CommonUtils.split(string);
@@ -127,7 +127,7 @@ public final class EncryptedCalendarAsStringType extends AbstractEncryptedAsStri
 
 
     /**
-     * @see org.jasypt.hibernate.type.AbstractEncryptedAsStringType#convertToString(java.lang.Object)
+     * @see org.jasypt.hibernate5.type.AbstractEncryptedAsStringType#convertToString(java.lang.Object)
      */
     protected String convertToString(final Object object) {
         final StringBuffer strBuff = new StringBuffer();

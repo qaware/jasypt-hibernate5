@@ -38,7 +38,7 @@ package org.jasypt.hibernate5.type;
  * <pre>
  *  &lt;hibernate-mapping package="myapp">
  *    ...
- *    &lt;typedef name="<b>encryptedDoubleAsString</b>" class="org.jasypt.hibernate.type.EncryptedDoubleAsStringType">
+ *    &lt;typedef name="<b>encryptedDoubleAsString</b>" class="org.jasypt.hibernate5.type.EncryptedDoubleAsStringType">
  *      &lt;param name="encryptorRegisteredName"><b><i>myHibernateStringEncryptor</i></b>&lt;/param>
  *    &lt;/typedef>
  *    ...
@@ -55,7 +55,7 @@ package org.jasypt.hibernate5.type;
  * ...where a <tt>HibernatePBEStringEncryptor</tt> object
  * should have been previously registered to be used
  * from Hibernate with name <tt>myHibernateStringEncryptor</tt> (see
- * {@link HibernatePBEStringEncryptor} and {@link HibernatePBEEncryptorRegistry}).
+ * {@link org.jasypt.hibernate5.encryptor.HibernatePBEStringEncryptor} and {@link org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry}).
  * </p>
  * <p>
  * Or, if you prefer to avoid registration of encryptors, you can configure
@@ -66,7 +66,7 @@ package org.jasypt.hibernate5.type;
  * <pre>
  *  &lt;hibernate-mapping package="myapp">
  *    ...
- *    &lt;typedef name="<b>encryptedDoubleAsString</b>" class="org.jasypt.hibernate.type.EncryptedDoubleAsStringType">
+ *    &lt;typedef name="<b>encryptedDoubleAsString</b>" class="org.jasypt.hibernate5.type.EncryptedDoubleAsStringType">
  *      &lt;param name="algorithm"><b><i>PBEWithMD5AndTripleDES</i></b>&lt;/param>
  *      &lt;param name="password"><b><i>XXXXX</i></b>&lt;/param>
  *      &lt;param name="keyObtentionIterations"><b><i>1000</i></b>&lt;/param>
@@ -93,7 +93,7 @@ package org.jasypt.hibernate5.type;
 public final class EncryptedDoubleAsStringType extends AbstractEncryptedAsStringType {
 
     /**
-     * @see org.jasypt.hibernate.type.AbstractEncryptedAsStringType#convertToObject(java.lang.String)
+     * @see org.jasypt.hibernate5.type.AbstractEncryptedAsStringType#convertToObject(java.lang.String)
      */
     protected Object convertToObject(final String string) {
         return new Double(string);

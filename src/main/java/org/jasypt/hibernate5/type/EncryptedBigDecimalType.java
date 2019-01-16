@@ -54,7 +54,7 @@ import java.util.Properties;
  * <pre>
  *  &lt;hibernate-mapping package="myapp">
  *    ...
- *    &lt;typedef name="<b>encryptedBigDecimal</b>" class="org.jasypt.hibernate.type.EncryptedBigDecimalType">
+ *    &lt;typedef name="<b>encryptedBigDecimal</b>" class="org.jasypt.hibernate5.type.EncryptedBigDecimalType">
  *      &lt;param name="encryptorRegisteredName"><b><i>myHibernateBigDecimalEncryptor</i></b>&lt;/param>
  *      &lt;param name="decimalScale"><b><i>2</i></b>&lt;/param>
  *    &lt;/typedef>
@@ -72,7 +72,7 @@ import java.util.Properties;
  * ...where a <tt>HibernatePBEBigDecimalEncryptor</tt> object
  * should have been previously registered to be used
  * from Hibernate with name <tt>myHibernateBigDecimalEncryptor</tt> (see
- * {@link HibernatePBEBigDecimalEncryptor} and {@link HibernatePBEEncryptorRegistry}).
+ * {@link org.jasypt.hibernate5.encryptor.HibernatePBEBigDecimalEncryptor} and {@link HibernatePBEEncryptorRegistry}).
  * </p>
  * <p>
  * Or, if you prefer to avoid registration of encryptors, you can configure
@@ -83,7 +83,7 @@ import java.util.Properties;
  * <pre>
  *  &lt;hibernate-mapping package="myapp">
  *    ...
- *    &lt;typedef name="<b>encryptedBigDecimal</b>" class="org.jasypt.hibernate.type.EncryptedBigDecimalType">
+ *    &lt;typedef name="<b>encryptedBigDecimal</b>" class="org.jasypt.hibernate5.type.EncryptedBigDecimalType">
  *      &lt;param name="algorithm"><b><i>PBEWithMD5AndTripleDES</i></b>&lt;/param>
  *      &lt;param name="password"><b><i>XXXXX</i></b>&lt;/param>
  *      &lt;param name="keyObtentionIterations"><b><i>1000</i></b>&lt;/param>

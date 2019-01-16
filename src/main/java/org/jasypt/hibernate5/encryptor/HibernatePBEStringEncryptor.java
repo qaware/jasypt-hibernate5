@@ -84,7 +84,7 @@ import java.security.Provider;
  *  &lt;/bean>
  *
  *  &lt;bean id="hibernateEncryptor"
- *    class="org.jasypt.hibernate.encryptor.HibernatePBEStringEncryptor">
+ *    class="org.jasypt.hibernate5.encryptor.HibernatePBEStringEncryptor">
  *    &lt;property name="registeredName">
  *        &lt;value><b>myHibernateStringEncryptor</b>&lt;/value>
  *    &lt;/property>
@@ -100,7 +100,7 @@ import java.security.Provider;
  * </p>
  * <p>
  * <pre>
- *    &lt;typedef name="encrypted" class="org.jasypt.hibernate.type.EncryptedStringType">
+ *    &lt;typedef name="encrypted" class="org.jasypt.hibernate5.type.EncryptedStringType">
  *      &lt;param name="encryptorRegisteredName"><b>myHibernateStringEncryptor</b>&lt;/param>
  *    &lt;/typedef>
  * </pre>

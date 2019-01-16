@@ -59,7 +59,7 @@ import java.util.Properties;
  *    &lt;session-factory>
  *
  *      &lt;!-- Database connection settings -->
- *      &lt;property name="<b>connection.provider_class</b>">org.jasypt.hibernate.connectionprovider.EncryptedPasswordDriverManagerConnectionProvider&lt;/property>
+ *      &lt;property name="<b>connection.provider_class</b>">org.jasypt.hibernate5.connectionprovider.EncryptedPasswordDriverManagerConnectionProvider&lt;/property>
  *      &lt;property name="<b>connection.encryptor_registered_name</b>">stringEncryptor&lt;/property>
  *      &lt;property name="connection.driver_class">org.postgresql.Driver&lt;/property>
  *      &lt;property name="connection.url">jdbc:postgresql://localhost/mydatabase&lt;/property>
