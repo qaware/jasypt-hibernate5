@@ -1,33 +1,33 @@
 /*
  * =============================================================================
- * 
+ *
  *   Copyright (c) 2007-2010, The JASYPT team (http://www.jasypt.org)
- * 
+ *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
- * 
+ *
  *       http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *   Unless required by applicable law or agreed to in writing, software
  *   distributed under the License is distributed on an "AS IS" BASIS,
  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
- * 
+ *
  * =============================================================================
  */
 package org.jasypt.hibernate5.type;
+
+import org.jasypt.commons.CommonUtils;
 
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import org.jasypt.commons.CommonUtils;
-
 /**
  * <p>
- * A <b>Hibernate</b> <tt>UserType</tt> implementation which allows 
+ * A <b>Hibernate</b> <tt>UserType</tt> implementation which allows
  * encryption of Calendar values into String (VARCHAR) database fields
  * during persistence of entities.
  * </p>
@@ -62,16 +62,16 @@ import org.jasypt.commons.CommonUtils;
  * ...where a <tt>HibernatePBEStringEncryptor</tt> object
  * should have been previously registered to be used
  * from Hibernate with name <tt>myHibernateStringEncryptor</tt> (see
- * {@link HibernatePBEStringEncryptor} and {@link HibernatePBEEncryptorRegistry}). 
+ * {@link HibernatePBEStringEncryptor} and {@link HibernatePBEEncryptorRegistry}).
  * </p>
  * <p>
- * The boolean <tt>storeTimeZone</tt> parameter allows the Calendar to be 
- * re-created with the same TimeZone that it was created. This is an 
+ * The boolean <tt>storeTimeZone</tt> parameter allows the Calendar to be
+ * re-created with the same TimeZone that it was created. This is an
  * <b>optional</b> parameter, and its default value is <b>FALSE</b>.
  * </p>
  * <p>
  * Or, if you prefer to avoid registration of encryptors, you can configure
- * your encryptor directly in the mapping file (although not recommended), 
+ * your encryptor directly in the mapping file (although not recommended),
  * like this:
  * </p>
  * <p>
@@ -99,14 +99,11 @@ import org.jasypt.commons.CommonUtils;
  * <a href="http://www.hibernate.org" target="_blank">Hibernate Reference
  * Documentation</a>.
  * </p>
- * 
- * 
- * @since 1.9.0
- * 
+ *
  * @author Chus Picos
- * 
+ * @since 1.9.0
  */
-public final class EncryptedCalendarAsStringType extends AbstractEncryptedAsStringType{
+public final class EncryptedCalendarAsStringType extends AbstractEncryptedAsStringType {
 
     private Boolean storeTimeZone = Boolean.FALSE;
 
@@ -142,17 +139,17 @@ public final class EncryptedCalendarAsStringType extends AbstractEncryptedAsStri
         }
         return strBuff.toString();
     }
- 
-    
+
+
     public synchronized void setParameterValues(final Properties parameters) {
-        
-      	super.setParameterValues(parameters);
-      	
+
+        super.setParameterValues(parameters);
+
         final String paramStoreTimeZone = parameters.getProperty(ParameterNaming.STORE_TIME_ZONE);
         if ((paramStoreTimeZone != null) && (!paramStoreTimeZone.trim().equals(""))) {
             this.storeTimeZone = CommonUtils.getStandardBooleanValue(paramStoreTimeZone);
         }
-        
+
     }
 
 

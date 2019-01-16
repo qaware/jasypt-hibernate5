@@ -1,23 +1,33 @@
 /*
  * =============================================================================
- * 
+ *
  *   Copyright (c) 2007-2010, The JASYPT team (http://www.jasypt.org)
- * 
+ *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
- * 
+ *
  *       http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *   Unless required by applicable law or agreed to in writing, software
  *   distributed under the License is distributed on an "AS IS" BASIS,
  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
- * 
+ *
  * =============================================================================
  */
 package org.jasypt.hibernate5.type;
+
+import org.hibernate.HibernateException;
+import org.hibernate.cfg.Environment;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.usertype.ParameterizedType;
+import org.hibernate.usertype.UserType;
+import org.jasypt.encryption.pbe.PBEByteEncryptor;
+import org.jasypt.encryption.pbe.StandardPBEByteEncryptor;
+import org.jasypt.exceptions.EncryptionInitializationException;
+import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,19 +40,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Properties;
 
-import org.hibernate.HibernateException;
-import org.hibernate.cfg.Environment;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.usertype.ParameterizedType;
-import org.hibernate.usertype.UserType;
-import org.jasypt.encryption.pbe.PBEByteEncryptor;
-import org.jasypt.encryption.pbe.StandardPBEByteEncryptor;
-import org.jasypt.exceptions.EncryptionInitializationException;
-import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
-
 /**
  * <p>
- * A <b>Hibernate</b> <tt>UserType</tt> implementation which allows transparent 
+ * A <b>Hibernate</b> <tt>UserType</tt> implementation which allows transparent
  * encryption of byte[] values during persistence of entities.
  * </p>
  * <p>
@@ -75,11 +75,11 @@ import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
  * ...where a <tt>HibernatePBEByteEncryptor</tt> object
  * should have been previously registered to be used
  * from Hibernate with name <tt>myHibernateByteEncryptor</tt> (see
- * {@link HibernatePBEByteEncryptor} and {@link HibernatePBEEncryptorRegistry}). 
+ * {@link HibernatePBEByteEncryptor} and {@link HibernatePBEEncryptorRegistry}).
  * </p>
  * <p>
  * Or, if you prefer to avoid registration of encryptors, you can configure
- * your encryptor directly in the mapping file (although not recommended), 
+ * your encryptor directly in the mapping file (although not recommended),
  * like this:
  * </p>
  * <p>
@@ -106,53 +106,50 @@ import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
  * <a href="http://www.hibernate.org" target="_blank">Hibernate Reference
  * Documentation</a>.
  * </p>
- * 
- * 
- * @since 1.9.0
- * 
+ *
  * @author Chus Picos
- * 
+ * @since 1.9.0
  */
 public final class EncryptedBinaryType implements UserType, ParameterizedType {
 
     private static final int BLOCK_SIZE = 2048;
-    
+
     private static final int sqlType = Types.VARBINARY;
-    private static final int[] sqlTypes = new int[]{ sqlType };
-    
+    private static final int[] sqlTypes = new int[]{sqlType};
+
     private boolean initialized = false;
     private boolean useEncryptorName = false;
-    
+
     private String encryptorName = null;
     private String algorithm = null;
     private String password = null;
     private Integer keyObtentionIterations = null;
-    
+
     private PBEByteEncryptor encryptor = null;
 
-    
+
     public int[] sqlTypes() {
         return (int[]) sqlTypes.clone();
     }
 
-    
+
     public Class returnedClass() {
         return byte[].class;
     }
 
-    
-    public boolean equals(final Object x, final Object y) 
+
+    public boolean equals(final Object x, final Object y)
             throws HibernateException {
-        
-        return (x == y) || 
-               (x != null && y != null && java.util.Arrays.equals((byte[]) x, (byte[]) y));
-        
+
+        return (x == y) ||
+                (x != null && y != null && java.util.Arrays.equals((byte[]) x, (byte[]) y));
+
     }
-    
-    
+
+
     public Object deepCopy(final Object value)
             throws HibernateException {
-        
+
         if (value == null) {
             return null;
         }
@@ -160,10 +157,10 @@ public final class EncryptedBinaryType implements UserType, ParameterizedType {
         final byte[] copyBytes = new byte[valueBytes.length];
         System.arraycopy(valueBytes, 0, copyBytes, 0, valueBytes.length);
         return copyBytes;
-        
+
     }
-    
-    
+
+
     public Object assemble(final Serializable cached, final Object owner)
             throws HibernateException {
         if (cached == null) {
@@ -172,8 +169,8 @@ public final class EncryptedBinaryType implements UserType, ParameterizedType {
         return deepCopy(cached);
     }
 
-    
-    public Serializable disassemble(final Object value) 
+
+    public Serializable disassemble(final Object value)
             throws HibernateException {
         if (value == null) {
             return null;
@@ -181,7 +178,7 @@ public final class EncryptedBinaryType implements UserType, ParameterizedType {
         return (Serializable) deepCopy(value);
     }
 
-    
+
     public boolean isMutable() {
         return true;
     }
@@ -189,25 +186,25 @@ public final class EncryptedBinaryType implements UserType, ParameterizedType {
 
     public int hashCode(final Object x)
             throws HibernateException {
-        
+
         final byte[] valueBytes = (byte[]) x;
         int result = 1;
-        for (int i = 0; i < valueBytes.length; i++ ) {
+        for (int i = 0; i < valueBytes.length; i++) {
             result = (result * 17) + valueBytes[i];
         }
         return result;
-        
+
     }
 
-    
-    public Object replace(final Object original, final Object target, final Object owner) 
+
+    public Object replace(final Object original, final Object target, final Object owner)
             throws HibernateException {
-        return (original == null)? null : deepCopy(original);
+        return (original == null) ? null : deepCopy(original);
     }
 
-    
+
     public Object nullSafeGet(final ResultSet rs, final String[] names,
-            final SharedSessionContractImplementor session, final Object owner)
+                              final SharedSessionContractImplementor session, final Object owner)
             throws HibernateException, SQLException {
 
         checkInitialization();
@@ -219,9 +216,9 @@ public final class EncryptedBinaryType implements UserType, ParameterizedType {
             if (rs.wasNull()) {
                 return null;
             }
-            
-            final ByteArrayOutputStream outputStream = 
-                new ByteArrayOutputStream(BLOCK_SIZE);
+
+            final ByteArrayOutputStream outputStream =
+                    new ByteArrayOutputStream(BLOCK_SIZE);
             final byte[] inputBuff = new byte[BLOCK_SIZE];
             try {
                 int readBytes = 0;
@@ -246,157 +243,156 @@ public final class EncryptedBinaryType implements UserType, ParameterizedType {
                     // exception ignored
                 }
             }
-            
+
             encryptedValue = outputStream.toByteArray();
-            
+
         } else {
-            
+
             encryptedValue = rs.getBytes(names[0]);
             if (rs.wasNull()) {
                 return null;
             }
-            
+
         }
-        
+
         return this.encryptor.decrypt(encryptedValue);
-        
+
     }
 
-    
+
     public void nullSafeSet(final PreparedStatement st, final Object value, final int index,
-            final SharedSessionContractImplementor session)
+                            final SharedSessionContractImplementor session)
             throws HibernateException, SQLException {
 
         checkInitialization();
-        
+
         if (value == null) {
             st.setNull(index, sqlType);
         } else {
             final byte[] encryptedValue = this.encryptor.encrypt((byte[]) value);
             if (Environment.useStreamsForBinary()) {
                 st.setBinaryStream(
-                        index, 
-                        new ByteArrayInputStream(encryptedValue), 
+                        index,
+                        new ByteArrayInputStream(encryptedValue),
                         encryptedValue.length);
             } else {
                 st.setBytes(index, encryptedValue);
             }
         }
-        
+
     }
 
-    
+
     public synchronized void setParameterValues(final Properties parameters) {
-        
+
         final String paramEncryptorName =
-            parameters.getProperty(ParameterNaming.ENCRYPTOR_NAME);
+                parameters.getProperty(ParameterNaming.ENCRYPTOR_NAME);
         final String paramAlgorithm =
-            parameters.getProperty(ParameterNaming.ALGORITHM);
+                parameters.getProperty(ParameterNaming.ALGORITHM);
         final String paramPassword =
-            parameters.getProperty(ParameterNaming.PASSWORD);
+                parameters.getProperty(ParameterNaming.PASSWORD);
         final String paramKeyObtentionIterations =
-            parameters.getProperty(ParameterNaming.KEY_OBTENTION_ITERATIONS);
-        
+                parameters.getProperty(ParameterNaming.KEY_OBTENTION_ITERATIONS);
+
         this.useEncryptorName = false;
         if (paramEncryptorName != null) {
-            
+
             if ((paramAlgorithm != null) ||
-                (paramPassword != null) ||
-                (paramKeyObtentionIterations != null)) {
-                
+                    (paramPassword != null) ||
+                    (paramKeyObtentionIterations != null)) {
+
                 throw new EncryptionInitializationException(
-                        "If \"" + ParameterNaming.ENCRYPTOR_NAME + 
-                        "\" is specified, none of \"" +
-                        ParameterNaming.ALGORITHM + "\", \"" +
-                        ParameterNaming.PASSWORD + "\" or \"" + 
-                        ParameterNaming.KEY_OBTENTION_ITERATIONS + "\" " +
-                        "can be specified");
-                
+                        "If \"" + ParameterNaming.ENCRYPTOR_NAME +
+                                "\" is specified, none of \"" +
+                                ParameterNaming.ALGORITHM + "\", \"" +
+                                ParameterNaming.PASSWORD + "\" or \"" +
+                                ParameterNaming.KEY_OBTENTION_ITERATIONS + "\" " +
+                                "can be specified");
+
             }
             this.encryptorName = paramEncryptorName;
             this.useEncryptorName = true;
-            
+
         } else if ((paramPassword != null)) {
 
             this.password = paramPassword;
-            
+
             if (paramAlgorithm != null) {
                 this.algorithm = paramAlgorithm;
             }
-            
+
             if (paramKeyObtentionIterations != null) {
 
                 try {
-                    this.keyObtentionIterations = 
-                        new Integer(
-                                Integer.parseInt(paramKeyObtentionIterations));
+                    this.keyObtentionIterations =
+                            new Integer(
+                                    Integer.parseInt(paramKeyObtentionIterations));
                 } catch (NumberFormatException e) {
                     throw new EncryptionInitializationException(
-                            "Value specified for \"" + 
-                            ParameterNaming.KEY_OBTENTION_ITERATIONS + 
-                            "\" is not a valid integer");
+                            "Value specified for \"" +
+                                    ParameterNaming.KEY_OBTENTION_ITERATIONS +
+                                    "\" is not a valid integer");
                 }
-                
+
             }
-            
+
         } else {
-            
+
             throw new EncryptionInitializationException(
-                    "If \"" + ParameterNaming.ENCRYPTOR_NAME + 
-                    "\" is not specified, then \"" +
-                    ParameterNaming.PASSWORD + "\" (and optionally \"" +
-                    ParameterNaming.ALGORITHM + "\" and \"" + 
-                    ParameterNaming.KEY_OBTENTION_ITERATIONS + "\") " +
-                    "must be specified");
-            
+                    "If \"" + ParameterNaming.ENCRYPTOR_NAME +
+                            "\" is not specified, then \"" +
+                            ParameterNaming.PASSWORD + "\" (and optionally \"" +
+                            ParameterNaming.ALGORITHM + "\" and \"" +
+                            ParameterNaming.KEY_OBTENTION_ITERATIONS + "\") " +
+                            "must be specified");
+
         }
     }
 
-    
-    
+
     private synchronized void checkInitialization() {
-        
+
         if (!this.initialized) {
-            
+
             if (this.useEncryptorName) {
 
-                final HibernatePBEEncryptorRegistry registry = 
-                    HibernatePBEEncryptorRegistry.getInstance();
-                final PBEByteEncryptor pbeEncryptor = 
-                    registry.getPBEByteEncryptor(this.encryptorName);
+                final HibernatePBEEncryptorRegistry registry =
+                        HibernatePBEEncryptorRegistry.getInstance();
+                final PBEByteEncryptor pbeEncryptor =
+                        registry.getPBEByteEncryptor(this.encryptorName);
                 if (pbeEncryptor == null) {
                     throw new EncryptionInitializationException(
                             "No big integer encryptor registered for hibernate " +
-                            "with name \"" + this.encryptorName + "\"");
+                                    "with name \"" + this.encryptorName + "\"");
                 }
                 this.encryptor = pbeEncryptor;
-                
+
             } else {
-                
-                final StandardPBEByteEncryptor newEncryptor = 
-                    new StandardPBEByteEncryptor();
-                
+
+                final StandardPBEByteEncryptor newEncryptor =
+                        new StandardPBEByteEncryptor();
+
                 newEncryptor.setPassword(this.password);
-                
+
                 if (this.algorithm != null) {
                     newEncryptor.setAlgorithm(this.algorithm);
                 }
-                
+
                 if (this.keyObtentionIterations != null) {
                     newEncryptor.setKeyObtentionIterations(
                             this.keyObtentionIterations.intValue());
                 }
-                
+
                 newEncryptor.initialize();
-                
+
                 this.encryptor = newEncryptor;
-                
+
             }
-            
+
             this.initialized = true;
         }
-        
+
     }
-    
-    
+
+
 }
