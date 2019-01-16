@@ -1,4 +1,10 @@
 
+ Implementation of a Hibernate 5.x Adapter for Jasypt 1.9.2 based on the implementation
+ in the JASYPT source repository that was never released.
+
+ The main purpose of this repository is to get the implementation pushed to maven central
+
+
  JASYPT: Java Simplified Encryption
  ----------------------------------
  
