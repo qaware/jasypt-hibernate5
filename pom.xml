@@ -31,6 +31,11 @@
   
   <description>Java library which enables encryption in java apps with minimum effort.</description>
 
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -142,7 +147,6 @@
         <configuration>
           <source>1.4</source>
           <target>1.4</target>
-          <encoding>US-ASCII</encoding>
         </configuration>
       </plugin>
       
@@ -150,9 +154,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.5</version>
-        <configuration>
-          <encoding>US-ASCII</encoding>
-        </configuration>
       </plugin>
       
       <plugin>
